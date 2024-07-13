@@ -1,0 +1,25 @@
+%%[
+SET @fName = [FirstName]
+SET @accountNum = [AccountNumber]
+SET @negativeBal = [NegativeBalance]
+SET @lastWith = [LastWithdrawnDate]
+SET @trimFname = TRIM(@fName)
+SET @properfName = PROPERCASE(@trimFname)
+SET @fourDigit = CONCAT("XXXXXXXX",substring(@accountNum,9,4))
+SET @negBalance = CONCAT("-",FORMAT(@negativeBal,"c"))
+SET @systemDate = Now(1)
+SET @localDate = SystemDateToLocalDate(@systemDate)
+SET @dateDiff = DATEDIFF(@localDate,@lastWith, "D")
+IF @negativeBal > 200 OR  @dateDiff > 30 THEN
+SET @finalMessage = "Immediate attention required! Please deposit funds immediately to avoid significant fees."
+ELSEIF
+@negativeBal >= 100 AND @negativeBal <= 200 THEN 
+SET @finalMessage = "Your account needs attention. Please deposit funds soon to avoid any fees."
+ELSE
+SET @finalMessage = "Please deposit funds at your earliest convenience to avoid any fees."
+ENDIF
+]%%
+Hello %%=v(@properfName)=%%, <br>Your SafeBank account ending in %%=v(@fourDigit)=%% is currently overdrawn by %%=v(@negBalance)=%%. 
+<br>
+%%=v(@finalMessage)=%%
+Reply back STOP to opt out.
